@@ -150,7 +150,7 @@ const Index = (props) => {
               <CardHeader className="border-0">
                 <Row className="align-items-center">
                   <div className="col">
-                    <h3 className="mb-0">Page visits</h3>
+                    <h3 className="mb-0">Plantaciones</h3>
                   </div>
                   <div className="col text-right">
                     <Button
@@ -167,10 +167,10 @@ const Index = (props) => {
               <Table className="align-items-center table-flush" responsive>
                 <thead className="thead-light">
                   <tr>
-                    <th scope="col">Page name</th>
-                    <th scope="col">Visitors</th>
-                    <th scope="col">Unique users</th>
-                    <th scope="col">Bounce rate</th>
+                    <th scope="col">id</th>
+                    <th scope="col">Localización</th>
+                    <th scope="col">Area</th>
+                    <th scope="col">Fecha de Inicio</th>
                   </tr>
                 </thead>
                 <tbody>
