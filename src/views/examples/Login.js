@@ -17,101 +17,58 @@
 */
 
 // reactstrap components
-import {
-  Button,
-  Card,
-  CardBody,
-  FormGroup,
-  Form,
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
-  Row,
-  Col,
-} from "reactstrap";
+import { useState } from 'react';
 
 const Login = () => {
+  const API_URL = "http://localhost:8080";
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLoginRequest = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch(API_URL + '/api/auth/Authenticate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "email": email, "password": password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      const token = data.data.token;
+      localStorage.setItem('token', token);
+      console.log(token); // Ajusta según la respuesta de tu API
+    } catch (error) {
+      console.log(`Error: ${error.message}`);
+    }
+  };
+
   return (
-    <>
-      <Col lg="5" md="7">
-        <Card className="bg-secondary shadow border-0">
-          <CardBody className="px-lg-5 py-lg-5">
-            <div className="text-center text-muted mb-4">
-              <small>Ingresar</small>
-            </div>
-            <Form role="form">
-              <FormGroup className="mb-3">
-                <InputGroup className="input-group-alternative">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-email-83" />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Email"
-                    type="email"
-                    autoComplete="new-email"
-                  />
-                </InputGroup>
-              </FormGroup>
-              <FormGroup>
-                <InputGroup className="input-group-alternative">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-lock-circle-open" />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Password"
-                    type="password"
-                    autoComplete="new-password"
-                  />
-                </InputGroup>
-              </FormGroup>
-              <div className="custom-control custom-control-alternative custom-checkbox">
-                <input
-                  className="custom-control-input"
-                  id=" customCheckLogin"
-                  type="checkbox"
-                />
-                <label
-                  className="custom-control-label"
-                  htmlFor=" customCheckLogin"
-                >
-                  <span className="text-muted">Remember me</span>
-                </label>
-              </div>
-              <div className="text-center">
-                <Button className="my-4" color="primary" type="button">
-                  Sign in
-                </Button>
-              </div>
-            </Form>
-          </CardBody>
-        </Card>
-        <Row className="mt-3">
-          <Col xs="6">
-            <a
-              className="text-light"
-              href="#pablo"
-              onClick={(e) => e.preventDefault()}
-            >
-              <small>Forgot password?</small>
+    <main>
+      <div className="login-box">
+        <form>
+          <div className="user-box">
+            <input type="text" name="" required="" value={email} onChange={(e) => setEmail(e.target.value)}/>
+            <label>Email</label>
+          </div>
+          <div className="user-box">
+            <input type="password" name="" required="" value={password} onChange={(e) => setPassword(e.target.value)}/>
+            <label>Password</label>
+          </div>
+          <center>
+            <a href="/admin/index" onClick={handleLoginRequest}>
+              LOGIN
+              <span></span>
             </a>
-          </Col>
-          <Col className="text-right" xs="6">
-            <a
-              className="text-light"
-              href="#pablo"
-              onClick={(e) => e.preventDefault()}
-            >
-              <small>Create new account</small>
-            </a>
-          </Col>
-        </Row>
-      </Col>
-    </>
+          </center>
+        </form>
+      </div>
+    </main>
   );
 };
 

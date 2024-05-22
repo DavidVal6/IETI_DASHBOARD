@@ -15,91 +15,61 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+import '../assets/css/login.css';
 import React from "react";
-import { useLocation, Route, Routes, Navigate } from "react-router-dom";
-// reactstrap components
-import { Container, Row, Col } from "reactstrap";
-
-// core components
-import AuthNavbar from "components/Navbars/AuthNavbar.js";
-import AuthFooter from "components/Footers/AuthFooter.js";
-
-import routes from "routes.js";
+import { useState } from 'react';
 
 const Auth = (props) => {
-  const mainContent = React.useRef(null);
-  const location = useLocation();
+  const API_URL = "http://localhost:8080";
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  React.useEffect(() => {
-    document.body.classList.add("bg-default");
-    return () => {
-      document.body.classList.remove("bg-default");
-    };
-  }, []);
-  React.useEffect(() => {
-    document.documentElement.scrollTop = 0;
-    document.scrollingElement.scrollTop = 0;
-    mainContent.current.scrollTop = 0;
-  }, [location]);
+  const handleLoginRequest = async (event) => {
+    console.log('Entre');
+    event.preventDefault();
+    try {
+      const response = await fetch(API_URL + '/api/auth/Authenticate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "email": email, "password": password }),
+      });
 
-  const getRoutes = (routes) => {
-    return routes.map((prop, key) => {
-      if (prop.layout === "/auth") {
-        return (
-          <Route path={prop.path} element={prop.component} key={key} exact />
-        );
-      } else {
-        return null;
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
-    });
+
+      const data = await response.json();
+      const token = data.token;
+      localStorage.setItem('token', token);
+      console.log(token); // Ajusta según la respuesta de tu API
+    } catch (error) {
+      console.log(`Error: ${error.message}`);
+    }
   };
 
   return (
-    <>
-      <div className="main-content" ref={mainContent}>
-        <AuthNavbar />
-        <div className="header bg-gradient-info py-7 py-lg-8">
-          <Container>
-            <div className="header-body text-center mb-7">
-              <Row className="justify-content-center">
-                <Col lg="5" md="6">
-                  <h1 className="text-white">¡Estas a un paso de incrementar tu rendimiento!</h1>
-                  <p className="text-lead text-light">
-                    Agro-gnome le da la bienvenida a todos los clientes que han decidido confiar en nosotros como la mejor
-                    solución para el agro Colombiano
-                  </p>
-                </Col>
-              </Row>
-            </div>
-          </Container>
-          <div className="separator separator-bottom separator-skew zindex-100">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="none"
-              version="1.1"
-              viewBox="0 0 2560 100"
-              x="0"
-              y="0"
-            >
-              <polygon
-                className="fill-default"
-                points="2560 0 2560 100 0 100"
-              />
-            </svg>
+    <main>
+      <div className="login-box">
+        <form>
+          <div className="user-box">
+            <input type="text" name="" required="" value={email} onChange={(e) => setEmail(e.target.value)}/>
+            <label>Email</label>
           </div>
-        </div>
-        {/* Page content */}
-        <Container className="mt--8 pb-5">
-          <Row className="justify-content-center">
-            <Routes>
-              {getRoutes(routes)}
-              <Route path="*" element={<Navigate to="/auth/login" replace />} />
-            </Routes>
-          </Row>
-        </Container>
+          <div className="user-box">
+            <input type="password" name="" required="" value={password} onChange={(e) => setPassword(e.target.value)}/>
+            <label>Password</label>
+          </div>
+          <center>
+            <a href="/admin/index" onClick={handleLoginRequest}>
+              LOGIN
+              <span></span>
+            </a>
+          </center>
+        </form>
       </div>
-      <AuthFooter />
-    </>
+    </main>
   );
 };
 
