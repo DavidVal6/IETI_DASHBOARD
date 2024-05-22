@@ -20,7 +20,7 @@
 import '../../assets/css/login.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from 'services/authentication.js'
+import { login } from 'services/authentication.js';
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -40,6 +40,12 @@ const Login = () => {
     }
   };
 
+  // const apiCall = async (event) => {
+  //   event.preventDefault();
+  //   let data = await getAllPlants();
+  //   console.log(JSON.stringify(data));
+  // }
+
 
   return (
     <div className="login-box">
@@ -57,6 +63,10 @@ const Login = () => {
             LOGIN
             <span></span>
           </a>
+          {/* <a href="/" onClick={apiCall}>
+            TEST
+            <span></span>
+          </a> */}
         </center>
       </form>
     </div>
