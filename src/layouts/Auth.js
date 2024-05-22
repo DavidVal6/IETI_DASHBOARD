@@ -15,61 +15,20 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import '../assets/css/login.css';
+import 'assets/css/auth.css';
 import React from "react";
-import { useState } from 'react';
+import Login from 'views/examples/Login';
+import agroGnomeLogo from 'assets/img/brand/agro_gnome_no_bg.png';
+
 
 const Auth = (props) => {
-  const API_URL = "http://localhost:8080";
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLoginRequest = async (event) => {
-    console.log('Entre');
-    event.preventDefault();
-    try {
-      const response = await fetch(API_URL + '/api/auth/Authenticate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ "email": email, "password": password }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-      const token = data.token;
-      localStorage.setItem('token', token);
-      console.log(token); // Ajusta según la respuesta de tu API
-    } catch (error) {
-      console.log(`Error: ${error.message}`);
-    }
-  };
-
   return (
-    <main>
-      <div className="login-box">
-        <form>
-          <div className="user-box">
-            <input type="text" name="" required="" value={email} onChange={(e) => setEmail(e.target.value)}/>
-            <label>Email</label>
-          </div>
-          <div className="user-box">
-            <input type="password" name="" required="" value={password} onChange={(e) => setPassword(e.target.value)}/>
-            <label>Password</label>
-          </div>
-          <center>
-            <a href="/admin/index" onClick={handleLoginRequest}>
-              LOGIN
-              <span></span>
-            </a>
-          </center>
-        </form>
-      </div>
-    </main>
+    <div className="auth-body">
+      <img className="logo_img" alt='agro_gnome_logo' src={agroGnomeLogo} />
+      <p>¡Aumenta tus utilidades con la mejor solución para el agro Colombiano!</p>
+      <h1>Iniciar Sesión</h1>
+      <Login />
+    </div>
   );
 };
 

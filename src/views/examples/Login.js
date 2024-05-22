@@ -17,12 +17,15 @@
 */
 
 // reactstrap components
+import '../../assets/css/login.css';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const API_URL = "http://localhost:8080";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLoginRequest = async (event) => {
     event.preventDefault();
@@ -32,7 +35,9 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ "email": email, "password": password }),
+        body: JSON.stringify(
+          {"email": email, 
+          "password": password}),
       });
 
       if (!response.ok) {
@@ -40,35 +45,36 @@ const Login = () => {
       }
 
       const data = await response.json();
-      const token = data.data.token;
+      const token = data.token;
       localStorage.setItem('token', token);
-      console.log(token); // Ajusta según la respuesta de tu API
+      if (typeof token !== 'undefined' && token !== null && token.trim() !== '') {
+        navigate('/admin/index');
+      }
     } catch (error) {
+      alert('Ha ocurrido un error inesperado');
       console.log(`Error: ${error.message}`);
     }
   };
 
   return (
-    <main>
-      <div className="login-box">
-        <form>
-          <div className="user-box">
-            <input type="text" name="" required="" value={email} onChange={(e) => setEmail(e.target.value)}/>
-            <label>Email</label>
-          </div>
-          <div className="user-box">
-            <input type="password" name="" required="" value={password} onChange={(e) => setPassword(e.target.value)}/>
-            <label>Password</label>
-          </div>
-          <center>
-            <a href="/admin/index" onClick={handleLoginRequest}>
-              LOGIN
-              <span></span>
-            </a>
-          </center>
-        </form>
-      </div>
-    </main>
+    <div className="login-box">
+      <form>
+        <div className="user-box">
+          <input type="text" name="" required="" value={email} onChange={(e) => setEmail(e.target.value)}/>
+          <label>Email</label>
+        </div>
+        <div className="user-box">
+          <input type="password" name="" required="" value={password} onChange={(e) => setPassword(e.target.value)}/>
+          <label>Password</label>
+        </div>
+        <center>
+          <a href="/admin/index" onClick={handleLoginRequest}>
+            LOGIN
+            <span></span>
+          </a>
+        </center>
+      </form>
+    </div>
   );
 };
 
