@@ -20,41 +20,26 @@
 import '../../assets/css/login.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { login } from 'services/authentication.js'
 
 const Login = () => {
-  const API_URL = "http://localhost:8080";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  let token;
 
   const handleLoginRequest = async (event) => {
     event.preventDefault();
-    try {
-      const response = await fetch(API_URL + '/api/auth/Authenticate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(
-          {"email": email, 
-          "password": password}),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-      const token = data.token;
-      localStorage.setItem('token', token);
-      if (typeof token !== 'undefined' && token !== null && token.trim() !== '') {
-        navigate('/admin/index');
-      }
-    } catch (error) {
-      alert('Ha ocurrido un error inesperado');
-      console.log(`Error: ${error.message}`);
+    await login({
+      "email": email,
+      "password": password
+    });
+    token = localStorage.getItem('token');
+    if (typeof token !== 'undefined' && token !== null && token.trim() !== '') {
+      navigate('/admin/index');
     }
   };
+
 
   return (
     <div className="login-box">
