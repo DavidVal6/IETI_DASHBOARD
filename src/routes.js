@@ -18,7 +18,7 @@
 import Index from "views/Index.js";
 import Profile from "views/examples/Profile.js";
 
-var routes = [
+const routes = [
   {
     path: "/index",
     name: "Dashboard",
