@@ -1,7 +1,7 @@
 // Contextual backgrounds
 @mixin bg-variant($parent, $color, $ignore-warning: true) {
     #{$parent} {
-        background-color: $color !important;
+        background-color: #9adfb0 !important;
     }
     a#{$parent},
     button#{$parent} {
@@ -13,7 +13,7 @@
 
 @mixin bg-gradient-variant($parent, $color) {
     #{$parent} {
-        background: linear-gradient(87deg, $color 0, adjust-hue($color, 25%) 100%) !important;
+        background: linear-gradient(87deg, #1abc9c 0%, #127a65 100%) !important;
     }
 }
 

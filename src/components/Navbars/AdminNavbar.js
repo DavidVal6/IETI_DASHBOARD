@@ -34,6 +34,11 @@ import {
   Media,
 } from "reactstrap";
 
+function parseJwt (token) {
+  const decodedToken = JSON.parse(atob(token.split('.')[1]));
+  return decodedToken.sub;
+};
+
 const AdminNavbar = (props) => {
   return (
     <>
@@ -69,7 +74,7 @@ const AdminNavbar = (props) => {
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
                     <span className="mb-0 text-sm font-weight-bold">
-                      Jessica Jones
+                      {parseJwt(localStorage.token)}
                     </span>
                   </Media>
                 </Media>

@@ -15,13 +15,14 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // node.js library that concatenates classes (strings)
 import classnames from "classnames";
 // javascipt plugin for creating charts
 import Chart from "chart.js";
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
+import { getAllPlantations } from "services/plantations";
 // reactstrap components
 import {
   Button,
@@ -48,9 +49,18 @@ import {
 
 import Header from "components/Headers/Header.js";
 
+
+
 const Index = (props) => {
   const [activeNav, setActiveNav] = useState(1);
   const [chartExample1Data, setChartExample1Data] = useState("data1");
+  const[plantations, setPlantations] = useState([]);
+
+  useEffect(() =>{
+    getAllPlantations().then(data => {
+      setPlantations(data);
+    });
+  },[]);
 
   if (window.Chart) {
     parseOptions(Chart, chartOptions());
@@ -60,6 +70,12 @@ const Index = (props) => {
     e.preventDefault();
     setActiveNav(index);
     setChartExample1Data("data" + index);
+  };
+
+  const handleSeeAll = async (e) => {
+    e.preventDefault();
+    const allPlantations = await getAllPlantations();
+    setPlantations(allPlantations);
   };
   return (
     <>
@@ -156,7 +172,7 @@ const Index = (props) => {
                     <Button
                       color="primary"
                       href="#pablo"
-                      onClick={(e) => e.preventDefault()}
+                      onClick={handleSeeAll}
                       size="sm"
                     >
                       See all
@@ -174,49 +190,15 @@ const Index = (props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">/argon/</th>
-                    <td>4,569</td>
-                    <td>340</td>
-                    <td>
-                      <i className="fas fa-arrow-up text-success mr-3" /> 46,53%
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">/argon/index.html</th>
-                    <td>3,985</td>
-                    <td>319</td>
-                    <td>
-                      <i className="fas fa-arrow-down text-warning mr-3" />{" "}
-                      46,53%
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">/argon/charts.html</th>
-                    <td>3,513</td>
-                    <td>294</td>
-                    <td>
-                      <i className="fas fa-arrow-down text-warning mr-3" />{" "}
-                      36,49%
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">/argon/tables.html</th>
-                    <td>2,050</td>
-                    <td>147</td>
-                    <td>
-                      <i className="fas fa-arrow-up text-success mr-3" /> 50,87%
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">/argon/profile.html</th>
-                    <td>1,795</td>
-                    <td>190</td>
-                    <td>
-                      <i className="fas fa-arrow-down text-danger mr-3" />{" "}
-                      46,53%
-                    </td>
-                  </tr>
+                  {plantations.map((plantations => (
+                    <tr key={plantations.id}>
+                      <th scope="row">{plantations.id}</th>
+                      <td>{plantations.location}</td>
+                      <td>{plantations.area}</td>
+                      <td>{plantations.initDate}</td>
+                    </tr>
+                  )))}
+                  
                 </tbody>
               </Table>
             </Card>
