@@ -39,7 +39,7 @@ const Header = () => {
                           Cosecha
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">
-                          350,897
+                          33 Hectareas
                         </span>
                       </div>
                       <Col className="col-auto">
