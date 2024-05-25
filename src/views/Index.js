@@ -56,8 +56,8 @@ const Index = (props) => {
   const [chartExample1Data, setChartExample1Data] = useState("data1");
   const[plantations, setPlantations] = useState([]);
 
-  useEffect(() =>{
-    getAllPlantations().then(data => {
+  useEffect(async () =>{
+    await getAllPlantations().then(data => {
       setPlantations(data);
     });
   },[]);
