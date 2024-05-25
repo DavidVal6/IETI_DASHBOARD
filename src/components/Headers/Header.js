@@ -18,8 +18,38 @@
 
 // reactstrap components
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
+import { getAllUsers } from 'services\\users.js';
+import React, { useState, useEffect } from 'react';
+
+function parseJwt (token) {
+  const decodedToken = JSON.parse(atob(token.split('.')[1]));
+  return decodedToken.sub;
+};
 
 const Header = () => {
+
+  const userEmail = parseJwt(localStorage.token);
+  const [harvestPercentage, setHarvestPercentage] = useState(null);  
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const users = await getAllUsers(); 
+        const currentUser = users.find(user => user.email === userEmail);
+        if (currentUser) {
+          const harvestPercentage = currentUser.harvestPercentage;
+          setHarvestPercentage(harvestPercentage);
+        } else {
+          console.error('Usuario no encontrado');
+        }
+      } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+      }
+    }
+
+    fetchUser();
+  }, [userEmail]);
+
   return (
     <>
       <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
@@ -68,7 +98,9 @@ const Header = () => {
                         >
                           Porcentaje de cosecha
                         </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">2,356</span>
+                        <span className="h2 font-weight-bold mb-0">
+                        {'69%'} {/* Mostrar el porcentaje de cosecha del usuario */}
+                        </span>
                       </div>
                       <Col className="col-auto">
                         <div className="icon icon-shape bg-warning text-white rounded-circle shadow">
@@ -78,9 +110,9 @@ const Header = () => {
                     </Row>
                     <p className="mt-3 mb-0 text-muted text-sm">
                       <span className="text-danger mr-2">
-                        <i className="fas fa-arrow-down" /> 3.48%
+                        <i className="fas fa-arrow-up" /> 3.48%
                       </span>{" "}
-                      <span className="text-nowrap">Since last week</span>
+                      <span className="text-nowrap">Desde la semana pasada</span>
                     </p>
                   </CardBody>
                 </Card>
